@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+ 
+h1 {
+  text-align: center;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left:0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0);
+  opacity: 0.7; /* Полупрозрачный фон */
+  overflow: auto;
+}
+.modal_content {
+  margin: 300px auto;
+  padding: 20px;
+  width: 30%;
+  background-color: rgb(255, 255, 255);
+}
+.close_modal_window {
+  color: #000;
+  float: right;
+  font-size: 30px;
+  cursor: pointer;
+}
