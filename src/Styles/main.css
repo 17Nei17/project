@@ -24,11 +24,10 @@ h1 {
 .todo-item {
   display: flex;
   font-size: 1rem;
-  border-top: 1px solid rgba(0,0,0,.1);
+  border-top: 2px solid rgba(0,0,0,.1);
   background-color: #fff;
   transition: all .2s;
-  -webkit-user-select: none;
-  user-select: none;
+  /* -webkit-user-select: none;  отвечает за возможность выделять название книги*/
   padding: 1em;
   align-items: center;
 }
@@ -74,7 +73,7 @@ h1 {
   margin-bottom: 1.5em;
   border: 3px solid #CADFCF;
   padding: 5px;
-  border-radius: 4px;
+  border-radius: 5px;
   background: #FEFEFE;
   color: #231F20;
   }
@@ -90,11 +89,11 @@ h1 {
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
 }
-.modal_content {
+#modal_content {
   margin: 300px auto;
   background-color: rgb(255, 255, 255);
-  padding: 25px;
-  width: 20%;
+  padding: 40px;
+  width: 30%;
   z-index: 99999;
 }
 .close_modal_window {
