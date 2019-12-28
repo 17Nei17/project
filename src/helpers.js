@@ -19,7 +19,6 @@ function createElement(tag, props, ...children) {
 
   return element;
 }
-
 class EventEmitter {
   constructor() {
     this.events = {};
@@ -31,6 +30,7 @@ class EventEmitter {
   }
 
   emit(type, arg) {
+    console.log(type, arg);
     if (this.events[type]) {
       this.events[type].forEach(listener => listener(arg));
     }
@@ -39,31 +39,12 @@ class EventEmitter {
 
 function save(data) {
   const string = JSON.stringify(data);
-
   localStorage.setItem('todos', string);
 }
 
 function load() {
   const string = localStorage.getItem('todos');
   const data = JSON.parse(string);
-
   return data;
 }
-
-// переместить в отдельный скрипт
-const modal = document.getElementById('mymodal');
-const btn = document.getElementById('btn_modal_window');
-const close = document.getElementById('close_modal_window');
-btn.onclick = function() {
-  modal.style.display = 'block';
-};
-close.onclick = function() {
-  modal.style.display = 'none';
-};
-window.onclick = function(event) {
-  if (event.target === modal) {
-    modal.style.display = 'none';
-  }
-};
-
 export { createElement, EventEmitter, save, load };
