@@ -10,33 +10,32 @@
     <h1>
       Библиотека
     </h1>
-
     <div class ='sidebar'>
-      <div id="div1">
-        <h4 class= "textfield" >Хочу посмотреть:</h4> 
-        <label class="first-Tool" id = "using-First-Tool">Пусто</label><br>
+        <h4 >Хочу прочесть:</h4> 
+        <div id="div1" >перетяните сюда книгу</div>
+
+        <div class = "end">
+          <h4>Cписок прочтенного:</h4> 
+        </div>
+
     </div>
 
-
-
-      </div>
-      <div class = "done">
-        <h4>Cписок просмотренных:</h4> 
-      </div>
-    </div>
     <div class ='tape'> 
-        <button id=btn_modal_window>Добавить новую книгу в ленту</button> 
       <h4>Общий список книг:</h4> 
       <div id ='item'>
-        <div id ='films'><ul id="todo-list"></ul>
-    </div>
-    <div class='modal' id='mymodal'>
-        <div class='modal_content'> <span class='close_modal_window' id='close_modal_window'>&times;</span> 
-            <FORM id = "todo-form">
-                <input id="add-input" type="text">
-                <button id="add-button" type="submit">Добавить</button>
-              </FORM>
-        </div>
-    </div>
+        <div id ='films'><ul id="books-list"></ul></div>
+      </div>
+        <FORM id = "books-form">
+            <input id="add-books" type="text">
+            <button id="add-button" type="submit">Добавить</button>
+        </FORM>
+     </div>
+     <div class='modal' id='mymodal'>
+         <div id='modal_content'> 
+          <span class='close_modal_window' id='close_modal_window'>&times;</span> 
+         </div>
+     </div>
+
+
   </body>
 </html>
