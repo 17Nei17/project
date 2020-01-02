@@ -11,28 +11,32 @@
       Библиотека
     </h1>
     <div class ='sidebar'>
-        <h4 >Хочу прочесть:</h4> 
-        <div id="div1" >перетяните сюда книгу</div>
+        <h3 >Хочу прочесть:</h3> 
+        <div id = "dropzone" >
+          <div id="put" class ='put'>перетащи сюда:</div>
+        </div>
 
         <div class = "end">
-          <h4>Cписок прочтенного:</h4> 
+          <h3>Cписок прочтенного:</h3> 
         </div>
 
     </div>
 
     <div class ='tape'> 
-      <h4>Общий список книг:</h4> 
+      <h3>Общий список книг:</h3> 
+      <FORM id = "books-form">
+        <input id="add-books" type="text">
+        <button id="add-button" type="submit">Добавить</button>
+      </FORM>
       <div id ='item'>
-        <div id ='films'><ul id="books-list"></ul></div>
+        <div id ='books'><ul id="books-list"></ul></div>
       </div>
-        <FORM id = "books-form">
-            <input id="add-books" type="text">
-            <button id="add-button" type="submit">Добавить</button>
-        </FORM>
      </div>
+
      <div class='modal' id='mymodal'>
          <div id='modal_content'> 
-          <span class='close_modal_window' id='close_modal_window'>&times;</span> 
+           <div id ='modal_description'></div>
+            <span id ='close_modal_window'>&times;</span> 
          </div>
      </div>
 
