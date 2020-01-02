@@ -10,57 +10,71 @@ class ListView extends EventEmitter {
     this.form.addEventListener('submit', this.handleAdd.bind(this));
   }
 
-  createListItem(todo) {
-    const checkbox = createElement('input', {
+  createListItem(book) {
+    // обьект с id именем и т.д
+    /*  const checkbox = createElement('input', {
       type: 'checkbox',
       className: 'checkbox',
-      checked: todo.completed ? 'checked' : '',
-    });
-    const label = createElement('label', { className: 'title' }, todo.title);
-    const label2 = createElement('label', { className: 'description' });
+      checked: book.completed ? 'checked' : '',
+    }); */
+    const label = createElement('label', { className: 'title' }, book.title);
+    const author = createElement('label', { className: 'author' }, `Автор: ${book.author}`);
+    const description = createElement('label', { className: 'description' });
     const editInput = createElement('input', { type: 'text', className: 'textfield' });
     const editButton = createElement('button', { className: 'edit' }, 'Изменить');
-    const editButton2 = createElement('button', { className: 'edit2' }, 'Добавить описание');
+    const viewButtonDescription = createElement(
+      'button',
+      { className: 'view' },
+      'посмотреть описание'
+    );
     const deleteButton = createElement('button', { className: 'remove' }, 'Удалить');
     const item = createElement(
       'li',
-      { className: `todo-item${todo.completed ? ' completed' : ''}`, 'data-id': todo.id },
-      checkbox,
+      {
+        className: `book-item${book.completed ? ' completed' : ''}`,
+        'data-id': book.id,
+        'data-description': book.description,
+      },
+      //  checkbox,
       label,
-      label2,
+      author,
+      description,
       editInput,
       editButton,
-      editButton2,
+      viewButtonDescription,
       deleteButton
     );
     return this.addEventListeners(item);
   }
 
   addEventListeners(item) {
-    const checkbox = item.querySelector('.checkbox');
+    //  const checkbox = item.querySelector('.checkbox');
     const editButton = item.querySelector('button.edit');
-    const editButton2 = item.querySelector('button.edit2');
     const removeButton = item.querySelector('button.remove');
-    const BookName = item.querySelector('label.title');
-    checkbox.addEventListener('change', this.handleToggle.bind(this));
+    // const BookName = item.querySelector('label.title');
+    const viewDescription = item.querySelector('button.view');
+    //   checkbox.addEventListener('change', this.handleToggle.bind(this));
     editButton.addEventListener('click', this.handleEdit.bind(this));
-    editButton2.addEventListener('click', this.handleDescription.bind(this));
+
     removeButton.addEventListener('click', this.handleRemove.bind(this));
-    BookName.addEventListener('click', this.viewDescription.bind(this)); // событие для того чтобы при наведение увидеть описание книги
+    viewDescription.addEventListener('click', this.viewDescription.bind(this)); // событие для того чтобы при наведение увидеть описание книги
+    // BookName.addEventListener('mouseleave', this.closeDescription.bind(this));
     const itemlabel = item.querySelector('label.title');
     itemlabel.addEventListener('dragstart', this.handleDragStart.bind(this));
     return item;
   }
 
   viewDescription(mouseEvent) {
-    const listItem = mouseEvent;
     const modal = document.getElementById('mymodal');
     const close = document.getElementById('close_modal_window');
-    const content = document.getElementById('modal_content');
+    const content = document.getElementById('modal_description');
+
+    const div = document.createElement('div');
+    div.className = 'alert';
+    div.innerHTML = 'тут будет описание книги (сейчас оно хранится в обьекте)';
+    content.after(div);
+
     modal.style.display = 'block';
-    if (listItem.originalTarget.nextSibling.parentElement.attributes.description !== undefined) {
-      content.outerHTML = `<div id="modal_content"> \n  ${listItem.originalTarget.nextSibling.parentElement.attributes.description.nodeValue}<span class=\"close_modal_window\" id=\"close_modal_window\">×</span> \n         </div>"`;
-    }
     close.onclick = function() {
       modal.style.display = 'none';
     };
@@ -116,7 +130,7 @@ class ListView extends EventEmitter {
     const title = input.value; // значение того что ввели
     const isEditing = listItem.classList.contains('editing');
     if (isEditing) {
-      this.emit('edit2', { id, title }); // передали id и то что написали в описание
+      this.emit('editDescription', { id, title }); // передали id и то что написали в описание
       //  this.emit('mouseenter', listItem.getAttribute('description'));
       listItem.setAttribute('description', title);
       listItem.classList.remove('editing');
@@ -134,10 +148,8 @@ class ListView extends EventEmitter {
   }
 
   handleDragStart(event) {
-    // отвечает за начало перетягивания (работает)
-    const x = [];
-    x.push(event.originalTarget.parentElement.parentElement.attributes[1].nodeValue);
-    event.dataTransfer.setData('Text', x);
+    // перетаскиваем элемент (точнее его имя)
+    event.dataTransfer.setData('Text', event.target.textContent);
     return this;
   }
 
