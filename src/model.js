@@ -49,7 +49,7 @@ class Model extends EventEmitter {
 console.log('ListModel ok');
 class ListModel extends EventEmitter {
   constructor(items = []) {
-    // состояние модели (на старте пустой массив)
+    // состояние модели (на старте пустой массив. заполняется обьектами с инфой о книге)
     super();
     this.items = items;
   }
@@ -58,10 +58,15 @@ class ListModel extends EventEmitter {
     return this.items.find(item => item.id == id);
   }
 
+  getItemByName(name) {
+    // это отвечает за передачу обьекта в другой класс при перетягивании
+
+    return this.items.find(item => item.title == name);
+  }
+
   addItem(item) {
-    // сюда передается обьект
+    // сюда передается обьект и добавляется в массив Model
     this.items.push(item);
-    console.log(this.items);
     return item;
   }
 
@@ -94,10 +99,13 @@ class BooksModel extends EventEmitter {
     return this.items.find(item => item.id == id);
   }
 
+  getItemByName() {
+    return this.items.find(item => item);
+  }
+
   addItem(item) {
-    console.log(`addItem ${item}`);
-    console.log(this.items);
     this.items.push(item);
+    this.emit('returnBook', item);
     return item;
   }
 
