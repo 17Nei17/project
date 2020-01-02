@@ -4,41 +4,47 @@ class ListController {
     this.model = model;
     this.view = view;
 
-    view.on('add', this.addDrawing.bind(this));
-    view.on('toggle', this.toggleTodo.bind(this));
-    view.on('remove', this.removeDrawing.bind(this));
-    view.on('draging', this.dragDrawing.bind(this));
-    view.on('edit', this.editTodo.bind(this));
+    view.on('add', this.addBook.bind(this));
+    view.on('toggle', this.toggleList.bind(this));
+    view.on('remove', this.removeBook.bind(this));
+    view.on('draging', this.dragBook.bind(this));
+    view.on('edit', this.editList.bind(this));
+    view.on('getObject', this.getObject.bind(this));
 
     view.show(model.items);
   }
 
-  addDrawing(title) {
+  getObject(name) {
+    return this.model.getItemByName(name);
+  }
+
+  addBook(book) {
     const item = this.model.addItem({
       id: Date.now(),
-      title,
+      title: book[0],
+      author: book[1],
+      description: book[2],
       completed: false,
     });
-
     this.view.addItem(item);
   }
 
-  removeDrawing(id) {
+  removeBook(id) {
     this.model.removeItem(id);
     this.view.removeItem(id);
   }
 
-  dragDrawing(draw) {
+  dragBook(draw) {
     this.craftingview.usingDraw.textContent = draw;
   }
 
-  editTodo({ id, title }) {
+  editList({ id, title }) {
     const item = this.model.updateItem(id, { title });
 
     this.view.editItem(item);
   }
 
-  toggleTodo({ id, completed }) {
+  toggleList({ id, completed }) {
     const item = this.model.updateItem(id, { completed });
 
     this.view.toggleItem(item);
@@ -46,19 +52,29 @@ class ListController {
 }
 
 class BookController {
-  constructor(model, listview, bookview) {
+  constructor(model, bookview, listModel) {
     this.model = model;
-    this.listview = listview;
     this.bookview = bookview;
+    this.listModel = listModel;
 
-    listview.on('add', this.addBook.bind(this));
     bookview.on('addBook', this.addBook.bind(this));
-    bookview.on('removeTool', this.removeBook.bind(this));
-    listview.on('draging', this.dragBook.bind(this));
+    bookview.on('remove', this.removeBook.bind(this));
+    bookview.on('draging', this.dragBook.bind(this));
+    bookview.on('getObject', this.getObject.bind(this));
+    model.on('returnBook', this.returnBook.bind(this));
+  }
+
+  getObject(name) {
+    //  this.listview.getItemByName(name);
+    this.addBook(this.listModel.getItemByName(name));
   }
 
   addBook(tool) {
     this.model.addItem(tool);
+  }
+
+  returnBook(name) {
+    this.bookview.addItem(name);
   }
 
   removeBook(id) {
