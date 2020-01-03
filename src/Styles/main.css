@@ -6,9 +6,11 @@ body {
 h1 {
   text-align: center;
 }
+
 h3 {
   text-align: center;
 }
+
 .sidebar {
   background: rgb(255, 255, 255);
   left: 0;
@@ -18,7 +20,8 @@ h3 {
   overflow: auto;
   align-items: center;
 }
-#put{
+
+#put{ /* лента желанных книг */
   margin-bottom: 1.5em;
   border: 4px solid rgb(202, 224, 207);
   border-radius: 5px;
@@ -26,10 +29,13 @@ h3 {
   color: #231F20;
   text-align: center;
   padding: 10px;
+  max-height: 300px;
+  overflow: auto;
 }
+
 #dropzone{
   text-align: center;
-  padding: 10px;
+  padding: 20px;
 }
 .tape{
   background: rgb(255, 255, 255);
@@ -37,7 +43,6 @@ h3 {
   right: 0; 
   width: 60%;
   height: 100%;
-  overflow: scroll;
 }
 
 .book-item {
@@ -46,30 +51,25 @@ h3 {
   border-top: 2px solid rgba(0,0,0,.1);
   background-color: rgb(248, 255, 253);
   transition: all .2s;
-/* -webkit-user-select: none;   отвечает за возможность выделять название книги*/
   padding: 1em;
   align-items: center;
 }
-
-.book-item.completed * {
-  color: lightgray;
+#books-list{
+  height: 700px;
+  overflow: scroll;
 }
-
-.book-item .checkbox {
-  margin-right: .5rem;
-}
-
 .book-item .title,
 .book-item .textfield {
   margin-right: auto;
 }
 
+.book-item .title,
+.book-item .author {
+  background-color: rgb(195, 255, 238);
+} 
+
 .book-item .textfield {
   display: none;
-}
-
-.book-item.completed .title {
-  text-decoration: line-through;
 }
 
 .book-item.editing .checkbox,
@@ -87,6 +87,7 @@ h3 {
   padding: 2px;
   margin-left: 10px;
 }
+
 #item ul {
   position: relative;
   margin-bottom: 1.5em;
@@ -108,6 +109,7 @@ h3 {
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
 }
+
 #modal_content {
   margin: 300px auto;
   background-color: rgb(255, 255, 255);
@@ -115,12 +117,34 @@ h3 {
   width: 30%;
   z-index: 99999;
 }
+
 #close_modal_window {
   color: rgb(255, 0, 0);
   float: right;
   font-size: 30px;
   cursor: pointer;
 }
+
 #books-form{
-  text-align: center;
+  margin-left: 3.5em;
+  align-items: center;
+}
+
+#headtape{
+  margin: 0px 200px;
+  display: flex;
+  transition: all .2s;
+  align-items: center;
+}
+.endBookButton {
+  background: url(../image/odobrenno.png); 
+  background-size: 100%;
+  width: 30px;  height: 30px;
+  border-radius: 50%;
+  border: 0;
+}
+.remove, .removeBooks{
+  background: url(../image/delete.png); 
+  background-size: 100%;
+  width: 25px;  height: 40px;
 }
