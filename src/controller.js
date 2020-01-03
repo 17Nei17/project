@@ -52,16 +52,18 @@ class ListController {
 }
 
 class BookController {
-  constructor(model, bookview, listModel) {
-    this.model = model;
+  constructor(bookmodel, bookview, listModel) {
+    this.bookmodel = bookmodel;
     this.bookview = bookview;
     this.listModel = listModel;
 
     bookview.on('addBook', this.addBook.bind(this));
     bookview.on('remove', this.removeBook.bind(this));
+    bookview.on('removeEnd', this.removeBookEnd.bind(this));
     bookview.on('draging', this.dragBook.bind(this));
     bookview.on('getObject', this.getObject.bind(this));
-    model.on('returnBook', this.returnBook.bind(this));
+    bookmodel.on('returnBook', this.returnBook.bind(this));
+    bookview.on('moveToCompleted', this.moveToCompleted.bind(this));
   }
 
   getObject(name) {
@@ -69,8 +71,8 @@ class BookController {
     this.addBook(this.listModel.getItemByName(name));
   }
 
-  addBook(tool) {
-    this.model.addItem(tool);
+  addBook(tool) { //получает обьект с данными
+    this.bookmodel.addItem(tool);
   }
 
   returnBook(name) {
@@ -78,44 +80,23 @@ class BookController {
   }
 
   removeBook(id) {
-    this.model.removeItem(id);
+    this.bookmodel.removeItem(id);
+    this.bookview.removeItem(id);
+  }
+
+  removeBookEnd(id) {
+    this.bookmodel.removeItem(id);
+    this.bookview.removeItemEnd(id);
+  }
+
+  moveToCompleted(id) {
+    this.bookview.removeItem(id);
+    this.bookview.addItemInEnded(this.bookmodel.getItem(id)); // тут переписать в view функцию чтобы отрисовала в "законченных книгах"
   }
 
   dragBook(tool) {
     this.bookview.usingDraw.textContent = tool;
   }
 }
-/*
-class EndController {
-  constructor(model, view, craftingview) {
-    this.model = model;
-    this.view = view;
-    this.craftingview = craftingview;
-
-    view.on('add', this.addTool.bind(this));
-    craftingview.on('add', this.addTool.bind(this));
-    view.on('removeTool', this.removeTool.bind(this));
-    view.on('draging', this.dragTool.bind(this));
-  }
-
-  addTool(title) {
-    const tool = this.model.addItem({
-      id: Date.now(),
-      title,
-    });
-
-    this.view.addItem(tool);
-  }
-
-  removeTool(id) {
-    this.model.removeItem(id);
-    this.view.removeItem(id);
-  }
-
-  dragTool(tool) {
-    this.craftingview.usingDraw.textContent = tool;
-  }
-}
-*/
 console.log('ListController ok');
 export { ListController, BookController };
