@@ -11,12 +11,6 @@ class ListView extends EventEmitter {
   }
 
   createListItem(book) {
-    // обьект с id именем и т.д
-    /*  const checkbox = createElement('input', {
-      type: 'checkbox',
-      className: 'checkbox',
-      checked: book.completed ? 'checked' : '',
-    }); */
     const label = createElement('label', { className: 'title' }, book.title);
     const author = createElement('label', { className: 'author' }, `Автор: ${book.author}`);
     const description = createElement('label', { className: 'description' });
@@ -27,15 +21,14 @@ class ListView extends EventEmitter {
       { className: 'view' },
       'посмотреть описание'
     );
-    const deleteButton = createElement('button', { className: 'remove' }, 'Удалить');
+    const deleteButton = createElement('button', { className: 'remove' });
     const item = createElement(
-      'li',
+      'div',
       {
         className: `book-item${book.completed ? ' completed' : ''}`,
         'data-id': book.id,
         'data-description': book.description,
       },
-      //  checkbox,
       label,
       author,
       description,
@@ -48,17 +41,12 @@ class ListView extends EventEmitter {
   }
 
   addEventListeners(item) {
-    //  const checkbox = item.querySelector('.checkbox');
     const editButton = item.querySelector('button.edit');
     const removeButton = item.querySelector('button.remove');
-    // const BookName = item.querySelector('label.title');
     const viewDescription = item.querySelector('button.view');
-    //   checkbox.addEventListener('change', this.handleToggle.bind(this));
     editButton.addEventListener('click', this.handleEdit.bind(this));
-
     removeButton.addEventListener('click', this.handleRemove.bind(this));
     viewDescription.addEventListener('click', this.viewDescription.bind(this)); // событие для того чтобы при наведение увидеть описание книги
-    // BookName.addEventListener('mouseleave', this.closeDescription.bind(this));
     const itemlabel = item.querySelector('label.title');
     itemlabel.addEventListener('dragstart', this.handleDragStart.bind(this));
     return item;
