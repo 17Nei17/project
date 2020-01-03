@@ -60,7 +60,6 @@ class ListModel extends EventEmitter {
 
   getItemByName(name) {
     // это отвечает за передачу обьекта в другой класс при перетягивании
-
     return this.items.find(item => item.title == name);
   }
 
