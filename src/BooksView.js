@@ -3,22 +3,19 @@ import { EventEmitter, createElement } from './helpers';
 class BookView extends EventEmitter {
   constructor() {
     super();
-    this.list = document.getElementById('books-list');
-    this.firstTool = document.getElementById('put');
-    this.firstTool.addEventListener('drop', this.handleDrop.bind(this));
-    this.firstTool.addEventListener('dragover', this.handleDragOver.bind(this));
-    this.firstTool.addEventListener('dragleave', this.handleDragLeave.bind(this));
+    // this.list = document.getElementById('books-list');
+    this.myBook = document.getElementById('put');
+    this.endBook = document.getElementById('end');
+    this.myBook.addEventListener('drop', this.handleDrop.bind(this));
+    this.myBook.addEventListener('dragover', this.handleDragOver.bind(this));
+    this.myBook.addEventListener('dragleave', this.handleDragLeave.bind(this));
   }
 
   createListItem(book) {
-    const checkbox = createElement('input', {
-      type: 'checkbox',
-      className: 'checkbox',
-      checked: book.completed ? 'checked' : '',
-    });
+    const endBookButton = createElement('button', { className: 'endBookButton' });
     const label = createElement('label', { className: 'title' }, book.title);
     const author = createElement('label', { className: 'author' }, `Автор: ${book.author}`);
-    const deleteButton = createElement('button', { className: 'remove' }, 'Удалить');
+    const deleteButton = createElement('button', { className: 'removeBooks' });
     const item = createElement(
       'li',
       {
@@ -26,7 +23,7 @@ class BookView extends EventEmitter {
         'data-id': book.id,
         'data-description': book.description,
       },
-      checkbox,
+      endBookButton,
       label,
       author,
       deleteButton
@@ -34,10 +31,41 @@ class BookView extends EventEmitter {
     return this.addEventListeners(item);
   }
 
+  createEndItem(book) {
+    const label = createElement('label', { className: 'title' }, book.title);
+    const author = createElement('label', { className: 'author' }, `Автор: ${book.author}`);
+    const deleteButton = createElement('button', { className: 'removeBooks' });
+    const item = createElement(
+      'li',
+      {
+        className: `book-item${book.completed ? ' completed' : ''}`,
+        'data-id': book.id,
+        'data-description': book.description,
+      },
+      label,
+      author,
+      deleteButton
+    );
+    return this.addEventListenersForEnd(item);
+  }
+
   addEventListeners(item) {
-    const removeButton = item.querySelector('button.remove');
+    const removeButton = item.querySelector('button.removeBooks');
+    const endButton = item.querySelector('button.endBookButton');
     removeButton.addEventListener('click', this.handleRemove.bind(this));
+    endButton.addEventListener('click', this.completeBook.bind(this));
     return item;
+  }
+
+  addEventListenersForEnd(item) {
+    const removeButton = item.querySelector('button.removeBooks');
+    removeButton.addEventListener('click', this.handleRemoveEnd.bind(this));
+    return item;
+  }
+
+  completeBook({ target }) {
+    const listItem = target.parentNode;
+    this.emit('moveToCompleted', listItem.getAttribute('data-id'));
   }
 
   handleRemove({ target }) {
@@ -45,8 +73,17 @@ class BookView extends EventEmitter {
     this.emit('remove', listItem.getAttribute('data-id'));
   }
 
+  handleRemoveEnd({ target }) {
+    const listItem = target.parentNode;
+    this.emit('removeEnd', listItem.getAttribute('data-id'));
+  }
+
   findListItem(id) {
-    return this.list.querySelector(`[data-id="${id}"]`);
+    return this.myBook.querySelector(`[data-id="${id}"]`);
+  }
+
+  findListItemEnd(id) {
+    return this.endBook.querySelector(`[data-id="${id}"]`);
   }
 
   handleDragOver(event) {
@@ -65,16 +102,29 @@ class BookView extends EventEmitter {
 
   handleDrop(event) {
     event.preventDefault();
-    const dropTool = event.textContent; // место куда перемещаем
     this.emit('getObject', event.dataTransfer.getData('Text')); // передали название книги
-    dropTool.style.opacity = 1;
-    articleDiv.appendChild(elem);
+    // dropTool.style.opacity = 1;
     return this;
   }
 
   addItem(book) {
     const listItem = this.createListItem(book);
-    this.firstTool.appendChild(listItem);
+    this.myBook.appendChild(listItem);
+  }
+
+  addItemInEnded(book) {
+    const listItem = this.createEndItem(book);
+    this.endBook.appendChild(listItem);
+  }
+
+  removeItem(id) {
+    const listItem = this.findListItem(id);
+    this.myBook.removeChild(listItem);
+  }
+
+  removeItemEnd(id) {
+    const listItem = this.findListItemEnd(id);
+    this.endBook.removeChild(listItem);
   }
 }
 console.log('BookView ok');
