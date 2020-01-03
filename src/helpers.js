@@ -38,11 +38,13 @@ class EventEmitter {
 
 function save(data) {
   const string = JSON.stringify(data);
+  console.log(string);
   localStorage.setItem('books', string);
 }
 
 function load() {
   const string = localStorage.getItem('books');
+  console.log(string);
   const data = JSON.parse(string);
   return data;
 }
