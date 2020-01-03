@@ -10,24 +10,28 @@
     <h1>
       Библиотека
     </h1>
+
     <div class ='sidebar'>
-        <h3 >Хочу прочесть:</h3> 
+      <h3 >Хочу прочесть:</h3> 
         <div id = "dropzone" >
           <div id="put" class ='put'>перетащи сюда:</div>
+  
         </div>
 
         <div class = "end">
           <h3>Cписок прочтенного:</h3> 
+          <div id="end"></div>
         </div>
-
     </div>
 
     <div class ='tape'> 
-      <h3>Общий список книг:</h3> 
-      <FORM id = "books-form">
-        <input id="add-books" type="text">
-        <button id="add-button" type="submit">Добавить</button>
-      </FORM>
+      <div id = 'headtape'>
+        <h3>Общий список книг:</h3> 
+        <FORM id = "books-form">
+          <input id="add-books" type="text">
+          <button id="add-button" type="submit">Добавить</button>
+        </FORM>
+      </div>
       <div id ='item'>
         <div id ='books'><ul id="books-list"></ul></div>
       </div>
