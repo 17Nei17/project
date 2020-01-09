@@ -29,7 +29,6 @@ class EventEmitter {
   }
 
   emit(type, arg) {
-    console.log(type, arg);
     if (this.events[type]) {
       this.events[type].forEach(listener => listener(arg));
     }
@@ -38,14 +37,24 @@ class EventEmitter {
 
 function save(data) {
   const string = JSON.stringify(data);
-  console.log(string);
   localStorage.setItem('books', string);
 }
 
+function saveMyBooks(data) {
+  const string = JSON.stringify(data);
+  localStorage.setItem('myBooks', string);
+}
+
 function load() {
-  const string = localStorage.getItem('books');
-  console.log(string);
+  const string = localStorage.getItem('books'); // тут все элементы
   const data = JSON.parse(string);
   return data;
 }
-export { createElement, EventEmitter, save, load };
+
+function loadMyBooks() {
+  const string = localStorage.getItem('myBooks');
+  const data = JSON.parse(string);
+  return data;
+}
+
+export { createElement, EventEmitter, save, load, saveMyBooks, loadMyBooks };
