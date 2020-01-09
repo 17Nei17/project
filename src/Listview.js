@@ -4,26 +4,24 @@ class ListView extends EventEmitter {
   constructor() {
     super();
     this.form = document.getElementById('books-form');
-    this.input = document.getElementById('add-books');
+    this.nameBooks = document.getElementById('name-books');
+    this.nameAuthor = document.getElementById('name-author');
+    this.nameDescription = document.getElementById('name-description');
     this.list = document.getElementById('books-list');
 
-    this.form.addEventListener('submit', this.handleAdd.bind(this));
+    this.form.addEventListener('submit', this.handleAdd.bind(this)); // добавление элемента
   }
 
   createListItem(book) {
     const label = createElement('label', { className: 'title' }, book.title);
-    const author = createElement('label', { className: 'author' }, `Автор: ${book.author}`);
-    const description = createElement('label', { className: 'description' });
-    const editInput = createElement('input', { type: 'text', className: 'textfield' });
+    const author = createElement('label', { className: 'author' }, `${book.author}`);
+    const editInputName = createElement('input', { type: 'text', className: 'changeName' }); // изменяет имя
+    const editInputAuthor = createElement('input', { type: 'text', className: 'changeAuthor' }); // изменяет автора
     const editButton = createElement('button', { className: 'edit' }, 'Изменить');
-    const viewButtonDescription = createElement(
-      'button',
-      { className: 'view' },
-      'посмотреть описание'
-    );
+    const viewButtonDescription = createElement('button', { className: 'view' }, ' Описание');
     const deleteButton = createElement('button', { className: 'remove' });
     const item = createElement(
-      'div',
+      'li',
       {
         className: `book-item${book.completed ? ' completed' : ''}`,
         'data-id': book.id,
@@ -31,8 +29,8 @@ class ListView extends EventEmitter {
       },
       label,
       author,
-      description,
-      editInput,
+      editInputName,
+      editInputAuthor,
       editButton,
       viewButtonDescription,
       deleteButton
@@ -46,7 +44,7 @@ class ListView extends EventEmitter {
     const viewDescription = item.querySelector('button.view');
     editButton.addEventListener('click', this.handleEdit.bind(this));
     removeButton.addEventListener('click', this.handleRemove.bind(this));
-    viewDescription.addEventListener('click', this.viewDescription.bind(this)); // событие для того чтобы при наведение увидеть описание книги
+    viewDescription.addEventListener('click', this.viewDescription.bind(this));
     const itemlabel = item.querySelector('label.title');
     itemlabel.addEventListener('dragstart', this.handleDragStart.bind(this));
     return item;
@@ -55,16 +53,20 @@ class ListView extends EventEmitter {
   viewDescription(mouseEvent) {
     const modal = document.getElementById('mymodal');
     const close = document.getElementById('close_modal_window');
-    const content = document.getElementById('modal_description');
-
-    const div = document.createElement('div');
-    div.className = 'alert';
-    div.innerHTML = 'тут будет описание книги (сейчас оно хранится в обьекте)';
-    content.after(div);
-
+    const modal_description = document.querySelector('.modal_description');
+    const title = document.createElement('div');
+    title.className = 'title';
+    const label = `<h3>Описание:</h3>`;
+    const label2 = `<div class ='modalDescription'>  ${mouseEvent.path[1].getAttribute(
+      'data-description'
+    )} </div>`;
+    title.innerHTML = label + label2;
+    modal_description.append(title);
     modal.style.display = 'block';
+    const id = mouseEvent.path[1].getAttribute('data-description'); // id книги
     close.onclick = function() {
       modal.style.display = 'none';
+      title.remove();
     };
   }
 
@@ -74,11 +76,14 @@ class ListView extends EventEmitter {
 
   handleAdd(event) {
     event.preventDefault();
-
-    if (!this.input.value) return alert('Необходимо ввести название книги');
-
-    const value = this.input.value;
-
+    if (!this.nameBooks.value) return alert('Необходимо ввести название книги');
+    if (!this.nameAuthor.value) return alert('Необходимо ввести автора книги');
+    const name = this.nameBooks.value;
+    const author = this.nameAuthor.value;
+    const description = this.nameDescription.value;
+    console.log(name + author + description);
+    const value = [];
+    value.push(name, author, description);
     this.emit('add', value);
   }
 
@@ -86,7 +91,6 @@ class ListView extends EventEmitter {
     const listItem = target.parentNode;
     const id = listItem.getAttribute('data-id');
     const completed = target.checked;
-
     this.emit('toggle', { id, completed });
   }
 
@@ -94,16 +98,21 @@ class ListView extends EventEmitter {
     const listItem = target.parentNode;
     const id = listItem.getAttribute('data-id');
     const label = listItem.querySelector('.title');
-    const input = listItem.querySelector('.textfield');
+    const label2 = listItem.querySelector('.author');
+    const changeName = listItem.querySelector('.changeName'); // input
+    const changeAuthor = listItem.querySelector('.changeAuthor');
     const editButton = listItem.querySelector('button.edit');
-    const title = input.value; // тут новое название книги
+    const title = changeName.value; // тут новое название книги
+    const author = changeAuthor.value; //  автор книги
     const isEditing = listItem.classList.contains('editing');
     if (isEditing) {
       editButton.textContent = 'Изменить';
-      this.emit('edit', { id, title });
+      this.emit('editName', { id, title });
+      this.emit('editAuthor', { id, author });
       listItem.classList.remove('editing');
     } else {
-      input.value = label.textContent;
+      changeName.value = label.textContent;
+      changeAuthor.value = label2.textContent;
       editButton.textContent = 'Сохранить';
       listItem.classList.add('editing');
     }
@@ -119,7 +128,6 @@ class ListView extends EventEmitter {
     const isEditing = listItem.classList.contains('editing');
     if (isEditing) {
       this.emit('editDescription', { id, title }); // передали id и то что написали в описание
-      //  this.emit('mouseenter', listItem.getAttribute('description'));
       listItem.setAttribute('description', title);
       listItem.classList.remove('editing');
       target.textContent = 'Изменить описание';
@@ -144,7 +152,6 @@ class ListView extends EventEmitter {
   show(books) {
     books.forEach(book => {
       const listItem = this.createListItem(book);
-
       this.list.appendChild(listItem);
     });
   }
@@ -152,30 +159,29 @@ class ListView extends EventEmitter {
   addItem(book) {
     // сюда передается обьект со всеми данным
     const listItem = this.createListItem(book);
-    this.input.value = '';
+    this.nameBooks.value = '';
+    this.nameAuthor.value = '';
+    this.nameDescription.value = '';
     this.list.appendChild(listItem);
   }
 
-  toggleItem(book) {
-    // галочка выполнения задания
-    const listItem = this.findListItem(book.id);
-    const checkbox = listItem.querySelector('.checkbox');
-
-    checkbox.checked = book.completed;
-
-    if (book.completed) {
-      listItem.classList.add('completed');
-    } else {
-      listItem.classList.remove('completed');
-    }
-  }
-
   editItem(book) {
+    console.log(book);
     const listItem = this.findListItem(book.id);
     const label = listItem.querySelector('.title');
     const editButton = listItem.querySelector('button.edit');
 
     label.textContent = book.title;
+    editButton.textContent = 'Изменить';
+    listItem.classList.remove('editing');
+  }
+
+  editItemAuthor(book) {
+    const listItem = this.findListItem(book.id);
+    const label = listItem.querySelector('.author');
+    const editButton = listItem.querySelector('button.edit');
+
+    label.textContent = book.author;
     editButton.textContent = 'Изменить';
     listItem.classList.remove('editing');
   }
