@@ -8,7 +8,8 @@ class ListController {
     view.on('toggle', this.toggleList.bind(this));
     view.on('remove', this.removeBook.bind(this));
     view.on('draging', this.dragBook.bind(this));
-    view.on('edit', this.editList.bind(this));
+    view.on('editName', this.editName.bind(this));
+    view.on('editAuthor', this.editAuthor.bind(this));
     view.on('getObject', this.getObject.bind(this));
 
     view.show(model.items);
@@ -19,14 +20,16 @@ class ListController {
   }
 
   addBook(book) {
+    const ids = setTimeout(Date.now(), 1000); // создает id с задержкой
     const item = this.model.addItem({
-      id: Date.now(),
+      id: ids,
       title: book[0],
       author: book[1],
       description: book[2],
       completed: false,
     });
     this.view.addItem(item);
+    // setTimeout(this.view.addItem(item), 50000);
   }
 
   removeBook(id) {
@@ -38,15 +41,18 @@ class ListController {
     this.craftingview.usingDraw.textContent = draw;
   }
 
-  editList({ id, title }) {
+  editName({ id, title }) {
     const item = this.model.updateItem(id, { title });
-
     this.view.editItem(item);
+  }
+
+  editAuthor({ id, author }) {
+    const item = this.model.updateAuthor(id, { author });
+    this.view.editItemAuthor(item);
   }
 
   toggleList({ id, completed }) {
     const item = this.model.updateItem(id, { completed });
-
     this.view.toggleItem(item);
   }
 }
@@ -64,6 +70,12 @@ class BookController {
     bookview.on('getObject', this.getObject.bind(this));
     bookmodel.on('returnBook', this.returnBook.bind(this));
     bookview.on('moveToCompleted', this.moveToCompleted.bind(this));
+
+    // view.on('getID', this.getID.bind(this));
+  }
+
+  getID(id) {
+    this.model.getItem(id);
   }
 
   getObject(name) {
@@ -71,7 +83,8 @@ class BookController {
     this.addBook(this.listModel.getItemByName(name));
   }
 
-  addBook(tool) { //получает обьект с данными
+  addBook(tool) {
+    // получает обьект с данными
     this.bookmodel.addItem(tool);
   }
 
@@ -91,7 +104,7 @@ class BookController {
 
   moveToCompleted(id) {
     this.bookview.removeItem(id);
-    this.bookview.addItemInEnded(this.bookmodel.getItem(id)); // тут переписать в view функцию чтобы отрисовала в "законченных книгах"
+    this.bookview.addItemInEnded(this.bookmodel.getItem(id));
   }
 
   dragBook(tool) {
