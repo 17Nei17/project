@@ -13,8 +13,8 @@ class BookView extends EventEmitter {
 
   createListItem(book) {
     const endBookButton = createElement('button', { className: 'endBookButton' });
-    const label = createElement('label', { className: 'title' }, book.title);
-    const author = createElement('label', { className: 'author' }, `Автор: ${book.author}`);
+    const label = createElement('label', { className: 'titleMyBook' }, book.title);
+    const author = createElement('label', { className: 'authorMyBook' }, `Автор: ${book.author}`);
     const deleteButton = createElement('button', { className: 'removeBooks' });
     const item = createElement(
       'li',
@@ -32,8 +32,12 @@ class BookView extends EventEmitter {
   }
 
   createEndItem(book) {
-    const label = createElement('label', { className: 'title' }, book.title);
-    const author = createElement('label', { className: 'author' }, `Автор: ${book.author}`);
+    const label = createElement('label', { className: 'titleMyEndBook' }, book.title);
+    const author = createElement(
+      'label',
+      { className: 'authorMyEndBook' },
+      `Автор: ${book.author}`
+    );
     const deleteButton = createElement('button', { className: 'removeBooks' });
     const item = createElement(
       'li',
@@ -103,11 +107,11 @@ class BookView extends EventEmitter {
   handleDrop(event) {
     event.preventDefault();
     this.emit('getObject', event.dataTransfer.getData('Text')); // передали название книги
-    // dropTool.style.opacity = 1;
     return this;
   }
 
   addItem(book) {
+    //   this.emit('getID', book.id);
     const listItem = this.createListItem(book);
     this.myBook.appendChild(listItem);
   }
