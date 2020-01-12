@@ -62,7 +62,11 @@ function start(arrBook) {
   MyBooks.forEach(elem => {
     // перебираем желания
     if (booksModel.getItem(elem.id) === undefined) {
+      // если такой еще не загружено
       bookController.addBook(elem);
+    } else if (booksModel.getItem(elem.id).completed === true) {
+      bookView.addItem(elem);
+      bookController.moveToCompleted(elem.id);
     } else {
       bookView.addItem(elem);
     }
