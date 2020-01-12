@@ -55,15 +55,15 @@ class ListView extends EventEmitter {
     const close = document.getElementById('close_modal_window');
     const modal_description = document.querySelector('.modal_description');
     const title = document.createElement('div');
-    title.className = 'title';
+    title.className = 'titleModal';
     const label = `<h3>Описание:</h3>`;
-    const label2 = `<div class ='modalDescription'>  ${mouseEvent.path[1].getAttribute(
+    const label2 = `<div class ='modalDescription'>   ${mouseEvent.path[1].getAttribute(
       'data-description'
     )} </div>`;
     title.innerHTML = label + label2;
     modal_description.append(title);
     modal.style.display = 'block';
-    const id = mouseEvent.path[1].getAttribute('data-description'); // id книги
+    //  const id = mouseEvent.path[1].getAttribute('data-description'); // id книги
     close.onclick = function() {
       modal.style.display = 'none';
       title.remove();
@@ -81,7 +81,6 @@ class ListView extends EventEmitter {
     const name = this.nameBooks.value;
     const author = this.nameAuthor.value;
     const description = this.nameDescription.value;
-    console.log(name + author + description);
     const value = [];
     value.push(name, author, description);
     this.emit('add', value);
@@ -166,7 +165,6 @@ class ListView extends EventEmitter {
   }
 
   editItem(book) {
-    console.log(book);
     const listItem = this.findListItem(book.id);
     const label = listItem.querySelector('.title');
     const editButton = listItem.querySelector('button.edit');
