@@ -3,7 +3,6 @@ import { EventEmitter, createElement } from './helpers';
 class BookView extends EventEmitter {
   constructor() {
     super();
-    // this.list = document.getElementById('books-list');
     this.myBook = document.getElementById('put');
     this.endBook = document.getElementById('end');
     this.myBook.addEventListener('drop', this.handleDrop.bind(this));
