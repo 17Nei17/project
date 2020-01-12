@@ -32,7 +32,6 @@ class ListModel extends EventEmitter {
 
   updateAuthor(id, author) {
     const item = this.getItem(id);
-    console.log(item);
     Object.keys(author).forEach(prop => ((item[prop] = author[prop]), console.log(prop)));
     this.emit('change', this.items);
     return item;
@@ -67,6 +66,12 @@ class BooksModel extends EventEmitter {
     this.emit('returnBook', item);
     this.emit('change', this.items);
     return item;
+  }
+
+  addStatus(id) {
+    const index = this.getItem(id);
+    index.completed = true;
+    this.emit('change', this.items);
   }
 
   removeItem(id) {
