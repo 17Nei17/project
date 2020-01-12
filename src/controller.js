@@ -20,7 +20,13 @@ class ListController {
   }
 
   addBook(book) {
-    const ids = setTimeout(Date.now(), 1000); // создает id с задержкой
+    let ids = 0;
+    if (this.model.items.length > 4) {
+      ids = Date.now();
+    } else {
+      ids = Date.now() + this.model.items.length;
+    }
+
     const item = this.model.addItem({
       id: ids,
       title: book[0],
@@ -29,7 +35,7 @@ class ListController {
       completed: false,
     });
     this.view.addItem(item);
-    // setTimeout(this.view.addItem(item), 50000);
+    // setTimeout(this.view.addItem(item),1000);
   }
 
   removeBook(id) {
@@ -79,13 +85,15 @@ class BookController {
   }
 
   getObject(name) {
-    //  this.listview.getItemByName(name);
     this.addBook(this.listModel.getItemByName(name));
   }
 
-  addBook(tool) {
-    // получает обьект с данными
-    this.bookmodel.addItem(tool);
+  addBook(book) {
+    if (this.bookmodel.getItem(book.id) === undefined) {
+      this.bookmodel.addItem(book);
+    } else {
+      alert('Такая книга уже есть в списке');
+    }
   }
 
   returnBook(name) {
@@ -103,6 +111,7 @@ class BookController {
   }
 
   moveToCompleted(id) {
+    this.bookmodel.addStatus(id);
     this.bookview.removeItem(id);
     this.bookview.addItemInEnded(this.bookmodel.getItem(id));
   }
