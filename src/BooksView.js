@@ -1,5 +1,5 @@
 import { EventEmitter, createElement } from './helpers';
-// zapchasti
+
 class BookView extends EventEmitter {
   constructor() {
     super();
@@ -110,7 +110,6 @@ class BookView extends EventEmitter {
   }
 
   addItem(book) {
-    //   this.emit('getID', book.id);
     const listItem = this.createListItem(book);
     this.myBook.appendChild(listItem);
   }
