@@ -113,8 +113,8 @@ class BookController {
     this.bookview.addItemInEnded(this.bookmodel.getItem(id));
   }
 
-  dragBook(tool) {
-    this.bookview.usingDraw.textContent = tool;
+  dragBook(book) {
+    this.bookview.usingDraw.textContent = book;
   }
 }
 console.log('ListController ok');
