@@ -1,4 +1,4 @@
-import { EventEmitter } from './helpers'; // EventEmitter позволяет выполнять функции (on. , emit.)
+import { EventEmitter } from './helpers';
 
 console.log('ListModel ok');
 class ListModel extends EventEmitter {
