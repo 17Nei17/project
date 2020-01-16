@@ -32,7 +32,7 @@ class ListModel extends EventEmitter {
 
   updateAuthor(id, author) {
     const item = this.getItem(id);
-    Object.keys(author).forEach(prop => ((item[prop] = author[prop]), console.log(prop)));
+    Object.keys(author).forEach(prop => (item[prop] = author[prop]));
     this.emit('change', this.items);
     return item;
   }
