@@ -35,7 +35,6 @@ class ListController {
       completed: false,
     });
     this.view.addItem(item);
-    // setTimeout(this.view.addItem(item),1000);
   }
 
   removeBook(id) {
@@ -76,8 +75,6 @@ class BookController {
     bookview.on('getObject', this.getObject.bind(this));
     bookmodel.on('returnBook', this.returnBook.bind(this));
     bookview.on('moveToCompleted', this.moveToCompleted.bind(this));
-
-    // view.on('getID', this.getID.bind(this));
   }
 
   getID(id) {
