@@ -3,7 +3,6 @@ import { EventEmitter } from '../helpers';
 console.log('allBooksListModel ok');
 class AllBooksListModel extends EventEmitter {
   constructor(items = []) {
-    // состояние модели (на старте пустой массив. заполняется обьектами с инфой о книге)
     super();
     this.items = items;
   }
