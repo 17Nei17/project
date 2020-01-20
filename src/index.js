@@ -1,4 +1,4 @@
-import './styles/main.css';
+import './Styles/main.css';
 
 import AllBooksListModel from './AllBooksList/allBooksListModel';
 import MyBooksPlannedModel from './MyBooksPlanned/myBooksPlannedModel';
@@ -17,8 +17,8 @@ const MyBooks = load('myBooks');
 const booksModel = new MyBooksPlannedModel(MyBooks || undefined);
 const listModel = new AllBooksListModel(State || undefined);
 
-booksModel.on('change', MyBooks => save(MyBooks, 'myBooks'));
-listModel.on('change', State => save(State, 'books'));
+booksModel.on('change', myBooks => save(myBooks, 'myBooks'));
+listModel.on('change', state => save(state, 'books'));
 
 const bookView = new MyBooksPlannedView();
 const listview = new AllBooksListView();
