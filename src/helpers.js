@@ -8,11 +8,11 @@ function createElement(tag, props, ...children) {
       element[key] = props[key];
     }
   });
+
   children.forEach(elem => {
     if (typeof elem === 'string') {
       elem = document.createTextNode(elem);
     }
-
     element.appendChild(elem);
   });
 
