@@ -54,7 +54,6 @@ class AllBooksListView extends EventEmitter {
   }
 
   viewDescription(mouseEvent) {
-    const modal = this.modal;
     const modalDescription = document.querySelector('.modal_description');
     const title = document.createElement('div');
     title.className = 'titleModal';
@@ -64,9 +63,9 @@ class AllBooksListView extends EventEmitter {
     )} </div>`;
     title.innerHTML = modalTopic + modalText;
     modalDescription.append(title);
-    modal.style.display = 'block';
+    this.modal.style.display = 'block';
     this.close.onclick = () => {
-      modal.style.display = 'none';
+      this.modal.style.display = 'none';
       title.remove();
     };
   }
@@ -84,14 +83,7 @@ class AllBooksListView extends EventEmitter {
     const description = this.nameDescription.value;
 
     const value = new CreateBookObject(title, author, description);
-    this.emit('add', value);
-  }
-
-  handleToggle({ target }) {
-    const listItem = target.parentNode;
-    const id = listItem.getAttribute('data-id');
-    const completed = target.checked;
-    this.emit('toggle', { id, completed });
+    return this.emit('add', value);
   }
 
   handleEdit({ target }) {
@@ -108,7 +100,6 @@ class AllBooksListView extends EventEmitter {
     if (isEditing) {
       editButton.textContent = 'Изменить';
       this.emit('editName', { id, title, author });
-      //  this.emit('editAuthor', { id, author });
       listItem.classList.remove('editing');
     } else {
       changeName.value = labelTitle.textContent;
@@ -130,10 +121,8 @@ class AllBooksListView extends EventEmitter {
       this.emit('editDescription', { id, title }); // передали id и то что написали в описание
       listItem.setAttribute('description', title);
       listItem.classList.remove('editing');
-      target.textContent = 'Изменить описание';
     } else {
       input.value = label.textContent; // тут то что пишем в поле "добавить описание"
-      target.textContent = 'Сохранить';
       listItem.classList.add('editing');
     }
   }
