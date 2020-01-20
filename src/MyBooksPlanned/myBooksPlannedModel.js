@@ -11,10 +11,6 @@ class MyBooksPlannedModel extends EventEmitter {
     return this.items.find(item => item.id == id);
   }
 
-  getItemByName() {
-    return this.items.find(item => item);
-  }
-
   addItem(item) {
     this.items.push(item);
     this.emit('returnBook', item);
