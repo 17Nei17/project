@@ -1,4 +1,3 @@
-// controller
 class AllBooksListController {
   constructor(model, view) {
     this.model = model;
@@ -6,18 +5,11 @@ class AllBooksListController {
 
     view.on('add', this.addBookOnListController.bind(this));
     view.on('remove', this.removeBook.bind(this));
-    view.on('draging', this.dragBook.bind(this));
     view.on('editName', this.editName.bind(this));
-    //   view.on('getObject', this.getObject.bind(this));
 
     view.show(model.items);
   }
 
-  /*
-  getObject(name) {
-    return this.model.getItemByName(name);
-  }
-*/
   addBookOnListController(book) {
     let newID = 0;
     if (this.model.items.length > 4) {
@@ -39,10 +31,6 @@ class AllBooksListController {
   removeBook(id) {
     this.model.removeItem(id);
     this.view.removeItem(id);
-  }
-
-  dragBook(draw) {
-    this.craftingview.usingDraw.textContent = draw;
   }
 
   editName({ id, title, author }) {
