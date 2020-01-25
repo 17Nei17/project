@@ -5,17 +5,16 @@ class AllBooksListController {
 
     view.on('add', this.addBookOnListController.bind(this));
     view.on('remove', this.removeBook.bind(this));
-    view.on('editName', this.editName.bind(this));
 
-    view.show(model.items);
+    view.show(model.booksArr);
   }
 
   addBookOnListController(book) {
     let newID = 0;
-    if (this.model.items.length > 4) {
+    if (this.model.booksArr.length > 4) {
       newID = Date.now();
     } else {
-      newID = Date.now() + this.model.items.length;
+      newID = Date.now() + this.model.booksArr.length;
     }
 
     const item = this.model.addItem({
@@ -25,19 +24,13 @@ class AllBooksListController {
       description: book.description,
       completed: false,
     });
-    this.view.addItem(item);
+    this.view.addBookInList(item);
   }
 
   removeBook(id) {
     this.model.removeItem(id);
     this.view.removeItem(id);
   }
-
-  editName({ id, title, author }) {
-    const item = this.model.updateItem(id, { title }, { author });
-    this.view.editItem(item);
-  }
 }
 
-console.log('ListController ok');
 export default AllBooksListController;
