@@ -9,23 +9,23 @@ import MyBooksPlannedView from './MyBooksPlanned/myBooksPlannedView';
 import AllBooksListController from './AllBooksList/allBooksListController';
 import MyBooksPlannedController from './MyBooksPlanned/myBooksPlannedController';
 
-import { save, load } from './helpers';
+import { saveBooksToLocalStorage, loadBooksFromLocalStorage } from './helpers';
 
-const State = load('books');
-const MyBooks = load('myBooks');
+const State = loadBooksFromLocalStorage('books');
+const MyBooks = loadBooksFromLocalStorage('myBooks');
 
 const booksModel = new MyBooksPlannedModel(MyBooks || undefined);
 const listModel = new AllBooksListModel(State || undefined);
 
-booksModel.on('change', myBooks => save(myBooks, 'myBooks'));
-listModel.on('change', state => save(state, 'books'));
+booksModel.on('change', myBooks => saveBooksToLocalStorage(myBooks, 'myBooks'));
+listModel.on('change', state => saveBooksToLocalStorage(state, 'books'));
 
 const bookView = new MyBooksPlannedView();
 const listview = new AllBooksListView();
 
 const listController = new AllBooksListController(listModel, listview);
 const bookController = new MyBooksPlannedController(booksModel, bookView, listModel);
-const beginBooks = [
+const startBooks = [
   {
     title: 'Властелин колец, братство кольца',
     author: 'Толкиен',
@@ -58,7 +58,7 @@ const beginBooks = [
   },
 ];
 // начальные книги если лента пуста
-function start(arrBeginBooks) {
+function startLoadPage(arrBeginBooks) {
   if (State === null || State.length === 0) {
     arrBeginBooks.forEach(elem => {
       listController.addBookOnListController(elem);
@@ -78,4 +78,4 @@ function start(arrBeginBooks) {
     }
   });
 }
-start(beginBooks);
+startLoadPage(startBooks);
