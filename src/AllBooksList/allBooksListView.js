@@ -3,24 +3,24 @@ import { EventEmitter, createElement, CreateBookObject } from '../helpers';
 class AllBooksListView extends EventEmitter {
   constructor() {
     super();
-    this.form = document.getElementById('books-form');
-    this.nameBook = document.getElementById('name-books');
-    this.nameAuthor = document.getElementById('name-author');
+    this.addBookForm = document.getElementById('books-form');
+    this.nameBookInput = document.getElementById('name-books');
+    this.nameAuthorInput = document.getElementById('name-author');
     this.nameDescription = document.getElementById('name-description');
     this.modal = document.getElementById('mymodal');
     this.close = document.getElementById('close_modal_window');
     this.list = document.getElementById('books-list');
 
-    this.form.addEventListener('submit', this.handleAdd.bind(this)); // добавление элемента
+    this.addBookForm.addEventListener('submit', this.handleAdd.bind(this)); // добавление элемента
   }
 
   createListItem(book) {
-    const title = createElement('label', { className: 'title' }, book.title);
-    const author = createElement('label', { className: 'author' }, `${book.author}`);
-    const editInputName = createElement('input', { type: 'text', className: 'changeName' }); // изменяет имя
-    const editInputAuthor = createElement('input', { type: 'text', className: 'changeAuthor' }); // изменяет автора
+    const titleBook = createElement('label', { className: 'title' }, book.title);
+    const authorBook = createElement('label', { className: 'author' }, `${book.author}`);
+    const editInputName = createElement('input', { type: 'text', className: 'changeName' }); // изменяет имя (изначально скрытый инпут)
+    const editInputAuthor = createElement('input', { type: 'text', className: 'changeAuthor' }); // изменяет автора(изначально скрытый инпут)
     const editButton = createElement('button', { className: 'edit' }, 'Изменить');
-    const viewButtonDescription = createElement('button', { className: 'view' }, ' Описание');
+    const viewDescriptionButton = createElement('button', { className: 'view' }, ' Описание');
     const deleteButton = createElement('button', { className: 'remove' });
     const item = createElement(
       'li',
@@ -29,12 +29,12 @@ class AllBooksListView extends EventEmitter {
         'data-id': book.id,
         'data-description': book.description,
       },
-      title,
-      author,
+      titleBook,
+      authorBook,
       editInputName,
       editInputAuthor,
       editButton,
-      viewButtonDescription,
+      viewDescriptionButton,
       deleteButton
     );
     return this.addEventListeners(item);
@@ -44,29 +44,31 @@ class AllBooksListView extends EventEmitter {
     const editButton = item.querySelector('button.edit');
     const removeButton = item.querySelector('button.remove');
     const viewDescription = item.querySelector('button.view');
+    const BookLabelName = item.querySelector('label.title');
+    //  const modalButtonChangeDescription = document.getElementById('modal_button');
 
     editButton.addEventListener('click', this.handleEdit.bind(this));
     removeButton.addEventListener('click', this.handleRemove.bind(this));
     viewDescription.addEventListener('click', this.viewDescription.bind(this));
-    const itemlabel = item.querySelector('label.title');
-    itemlabel.addEventListener('dragstart', this.handleDragStart.bind(this));
+    BookLabelName.addEventListener('dragstart', this.handleDragStart.bind(this));
+    //  modalButtonChangeDescription.addEventListener('click', this.handleDescription.bind(this));
     return item;
   }
 
   viewDescription(mouseEvent) {
     const modalDescription = document.querySelector('.modal_description');
-    const title = document.createElement('div');
-    title.className = 'titleModal';
+    const modalTitle = document.createElement('div');
+    modalTitle.className = 'titleModal';
     const modalTopic = `<h3>Описание:</h3>`;
     const modalText = `<div class ='modalDescription'>   ${mouseEvent.path[1].getAttribute(
       'data-description'
     )} </div>`;
-    title.innerHTML = modalTopic + modalText;
-    modalDescription.append(title);
+    modalTitle.innerHTML = modalTopic + modalText;
+    modalDescription.append(modalTitle);
     this.modal.style.display = 'block';
     this.close.onclick = () => {
       this.modal.style.display = 'none';
-      title.remove();
+      modalTitle.remove();
     };
   }
 
@@ -76,10 +78,10 @@ class AllBooksListView extends EventEmitter {
 
   handleAdd(event) {
     event.preventDefault();
-    if (!this.nameBook.value) return alert('Необходимо ввести название книги');
-    if (!this.nameAuthor.value) return alert('Необходимо ввести автора книги');
-    const title = this.nameBook.value;
-    const author = this.nameAuthor.value;
+    if (!this.nameBookInput.value) return alert('Необходимо ввести название книги');
+    if (!this.nameAuthorInput.value) return alert('Необходимо ввести автора книги');
+    const title = this.nameBookInput.value;
+    const author = this.nameAuthorInput.value;
     const description = this.nameDescription.value;
 
     const value = new CreateBookObject(title, author, description);
@@ -89,80 +91,78 @@ class AllBooksListView extends EventEmitter {
   handleEdit({ target }) {
     const listItem = target.parentNode;
     const id = listItem.getAttribute('data-id');
-    const labelTitle = listItem.querySelector('.title');
-    const labelAuthor = listItem.querySelector('.author');
-    const changeName = listItem.querySelector('.changeName'); // input
-    const changeAuthor = listItem.querySelector('.changeAuthor');
+    const labelBookTitle = listItem.querySelector('.title');
+    const labelBookAuthor = listItem.querySelector('.author');
+    const changeName = listItem.querySelector('.changeName'); // input name  (cкрытый)
+    const changeAuthor = listItem.querySelector('.changeAuthor'); // input author
     const editButton = listItem.querySelector('button.edit');
-    const title = changeName.value; // тут новое название книги
-    const author = changeAuthor.value; //  автор книги
+    const newTitleBook = changeName.value; // тут новое название книги
+    const newAuthorBook = changeAuthor.value; //  автор книги
     const isEditing = listItem.classList.contains('editing');
+
     if (isEditing) {
       editButton.textContent = 'Изменить';
-      this.emit('editName', { id, title, author });
+      this.emit('editName', { id, newTitleBook, newAuthorBook }); // заносим изменения в model
+      labelBookTitle.textContent = newTitleBook; // заносим изменения в view
+      labelBookAuthor.textContent = newAuthorBook;
       listItem.classList.remove('editing');
     } else {
-      changeName.value = labelTitle.textContent;
-      changeAuthor.value = labelAuthor.textContent;
+      changeName.value = labelBookTitle.textContent;
+      changeAuthor.value = labelBookAuthor.textContent;
       editButton.textContent = 'Сохранить';
       listItem.classList.add('editing');
     }
   }
 
+  /* работает с редактированием описания книги в модальном окне */
+  /*
   handleDescription({ target }) {
-    // задает описание
-    const listItem = target.parentNode; // тут нужный элемент и его id
-    const id = listItem.getAttribute('data-id');
-    const label = listItem.querySelector('.description'); // html часть с классом description
-    const input = listItem.querySelector('.textfield'); // поле ввода
-    const title = input.value; // значение того что ввели
-    const isEditing = listItem.classList.contains('editing');
+    // изменяет описание
+    const listItem = target.parentNode; // тут все что в модальном окне
+    console.log(target);
+    const description = listItem.querySelector('.modalDescription'); // html часть с классом description
+    console.log(description.textContent); // тут само описание
+    const inputNewDescription = listItem.querySelector('.textfield'); // поле ввода
+    inputNewDescription.classList.add('editing');
+
+    const title = inputNewDescription.value; // значение того что ввели
+    const isEditing = inputNewDescription.classList.contains('editing');
     if (isEditing) {
-      this.emit('editDescription', { id, title }); // передали id и то что написали в описание
-      listItem.setAttribute('description', title);
-      listItem.classList.remove('editing');
+   //   this.emit('editDescription', { id, title }); // передали id и то что написали в описание
+      // listItem.setAttribute('description', title);
+      target.textContent = 'Сохранить';
+      inputNewDescription.classList.remove('editing');
     } else {
-      input.value = label.textContent; // тут то что пишем в поле "добавить описание"
+      inputNewDescription.value = description.textContent; // тут то, что пишем в поле "добавить описание"
+      target.textContent = 'Сохранить';
       listItem.classList.add('editing');
     }
   }
-
+*/
   handleRemove({ target }) {
     const listItem = target.parentNode;
     this.emit('remove', listItem.getAttribute('data-id'));
   }
 
   handleDragStart(event) {
-    // перетаскиваем элемент (точнее его имя)
     event.dataTransfer.setData('Text', event.target.textContent);
     return this;
   }
 
   show(books) {
+    console.log(books);
     books.forEach(book => {
       const listItem = this.createListItem(book);
       this.list.appendChild(listItem);
     });
   }
 
-  addItem(book) {
+  addBookInList(book) {
     const listItem = this.createListItem(book);
-    this.nameBook.value = '';
-    this.nameAuthor.value = '';
+    this.nameBookInput.value = '';
+    this.nameAuthorInput.value = '';
     this.nameDescription.value = '';
     this.list.appendChild(listItem);
-  }
-
-  editItem(book) {
-    const listItem = this.findListItem(book.id);
-    const title = listItem.querySelector('.title');
-    const author = listItem.querySelector('.author');
-    const editButton = listItem.querySelector('button.edit');
-
-    title.textContent = book.title;
-    author.textContent = book.author;
-    editButton.textContent = 'Изменить';
-    listItem.classList.remove('editing');
   }
 
   removeItem(id) {
@@ -170,6 +170,5 @@ class AllBooksListView extends EventEmitter {
     this.list.removeChild(listItem);
   }
 }
-console.log('allBooksListView ok');
 
 export default AllBooksListView;
