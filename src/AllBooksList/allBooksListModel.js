@@ -1,39 +1,42 @@
 import { EventEmitter } from '../helpers';
 
-console.log('allBooksListModel ok');
 class AllBooksListModel extends EventEmitter {
-  constructor(items = []) {
+  constructor(booksArr = []) {
     super();
-    this.items = items;
+    this.booksArr = booksArr;
   }
 
   getItem(id) {
-    return this.items.find(item => item.id == id);
+    return this.booksArr.find(item => item.id === id);
   }
 
   getItemByName(name) {
-    return this.items.find(item => item.title == name);
+    return this.booksArr.find(item => item.title === name);
   }
 
   addItem(item) {
-    this.items.push(item);
-    this.emit('change', this.items);
+    this.booksArr.push(item);
+    this.emit('change', this.booksArr);
     return item;
   }
 
   updateItem(id, title, author) {
     const item = this.getItem(id);
-    Object.keys(title).forEach(prop => (item[prop] = title[prop]));
-    Object.keys(author).forEach(prop => (item[prop] = author[prop]));
-    this.emit('change', this.items);
+
+    Object.keys(title, author).forEach(function(prop) {
+      item[prop] = title[prop];
+      item[prop] = author[prop];
+    });
+
+    this.emit('change', this.booksArr);
     return item;
   }
 
   removeItem(id) {
-    const index = this.items.findIndex(item => item.id == id);
+    const index = this.booksArr.findIndex(item => item.id === Number(id));
     if (index > -1) {
-      this.items.splice(index, 1);
-      this.emit('change', this.items);
+      this.booksArr.splice(index, 1);
+      this.emit('change', this.booksArr);
     }
   }
 }
