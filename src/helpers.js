@@ -36,12 +36,12 @@ class EventEmitter {
   }
 }
 
-function save(data, booksType) {
+function saveBooksToLocalStorage(data, booksType) {
   const string = JSON.stringify(data);
   localStorage.setItem(`${booksType}`, string);
 }
 
-function load(booksType) {
+function loadBooksFromLocalStorage(booksType) {
   const books = localStorage.getItem(`${booksType}`);
   const dataBooks = JSON.parse(books);
   return dataBooks;
@@ -53,4 +53,10 @@ function CreateBookObject(title, author, description) {
   this.description = description;
 }
 
-export { createElement, EventEmitter, save, load, CreateBookObject };
+export {
+  createElement,
+  EventEmitter,
+  saveBooksToLocalStorage,
+  loadBooksFromLocalStorage,
+  CreateBookObject,
+};
