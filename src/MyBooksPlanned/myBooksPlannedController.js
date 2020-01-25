@@ -6,14 +6,14 @@ class MyBooksPlannedController {
 
     bookview.on('addBook', this.addBook.bind(this));
     bookview.on('remove', this.removeBook.bind(this));
-    bookview.on('removeEnd', this.removeBookEnd.bind(this));
     bookview.on('draging', this.dragBook.bind(this));
-    bookview.on('getObject', this.getObject.bind(this));
+    bookview.on('addBookFromDrag', this.addBookFromDrag.bind(this));
     bookmodel.on('returnBook', this.returnBook.bind(this));
     bookview.on('moveToCompleted', this.moveToCompleted.bind(this));
   }
 
-  getObject(name) {
+  addBookFromDrag(name) {
+    // после перетягивания книги у нас есть только ее имя, но нам нужны все ее данные для того, чтобы добавить в model и view
     this.addBook(this.listModel.getItemByName(name));
   }
 
@@ -29,14 +29,14 @@ class MyBooksPlannedController {
     this.bookview.addItem(name);
   }
 
-  removeBook(id) {
-    this.bookmodel.removeItem(id);
-    this.bookview.removeItem(id);
-  }
-
-  removeBookEnd(id) {
-    this.bookmodel.removeItem(id);
-    this.bookview.removeItemEnd(id);
+  removeBook(bookInfo) {
+    this.bookmodel.removeItem(bookInfo.id);
+    if (bookInfo.status === 'end') {
+      this.bookview.removeItem(bookInfo.id, bookInfo.status);
+    }
+    if (bookInfo.status === 'put') {
+      this.bookview.removeItem(bookInfo.id, bookInfo.status);
+    }
   }
 
   moveToCompleted(id) {
@@ -49,5 +49,4 @@ class MyBooksPlannedController {
     this.bookview.usingDraw.textContent = book;
   }
 }
-console.log('ListController ok');
 export default MyBooksPlannedController;
