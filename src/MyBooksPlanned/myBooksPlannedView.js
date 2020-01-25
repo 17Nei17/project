@@ -3,18 +3,22 @@ import { EventEmitter, createElement } from '../helpers';
 class MyBooksPlannedView extends EventEmitter {
   constructor() {
     super();
-    this.myBook = document.getElementById('put');
-    this.endBook = document.getElementById('end');
+    this.myBook = document.getElementById('put'); // "Мои" книги
+    this.finishedBook = document.getElementById('end'); // "завершенные" книги
     this.myBook.addEventListener('drop', this.handleDrop.bind(this));
     this.myBook.addEventListener('dragover', this.handleDragOver.bind(this));
     this.myBook.addEventListener('dragleave', this.handleDragLeave.bind(this));
   }
 
   createListItem(book) {
-    const endBookButton = createElement('button', { className: 'endBookButton' });
-    const label = createElement('label', { className: 'titleMyBook' }, book.title);
-    const author = createElement('label', { className: 'authorMyBook' }, `Автор: ${book.author}`);
-    const deleteButton = createElement('button', { className: 'removeBooks' });
+    const addStatusComplete = createElement('button', { className: 'endBookButton' });
+    const titleMyBook = createElement('label', { className: 'titleMyBook' }, book.title);
+    const authorMyBook = createElement(
+      'label',
+      { className: 'authorMyBook' },
+      `Автор: ${book.author}`
+    );
+    const deleteBookButton = createElement('button', { className: 'removeBooks' });
     const item = createElement(
       'li',
       {
@@ -22,22 +26,22 @@ class MyBooksPlannedView extends EventEmitter {
         'data-id': book.id,
         'data-description': book.description,
       },
-      endBookButton,
-      label,
-      author,
-      deleteButton
+      addStatusComplete,
+      titleMyBook,
+      authorMyBook,
+      deleteBookButton
     );
-    return this.addEventListeners(item);
+    return this.addEventListeners(item, 'myBook');
   }
 
   createEndItem(book) {
-    const label = createElement('label', { className: 'titleMyEndBook' }, book.title);
-    const author = createElement(
+    const titleMyCompleteBook = createElement('label', { className: 'titleMyEndBook' }, book.title);
+    const authorMyCompleteBook = createElement(
       'label',
       { className: 'authorMyEndBook' },
       `Автор: ${book.author}`
     );
-    const deleteButton = createElement('button', { className: 'removeBooks' });
+    const deleteBookButton = createElement('button', { className: 'removeBooks' });
     const item = createElement(
       'li',
       {
@@ -45,40 +49,34 @@ class MyBooksPlannedView extends EventEmitter {
         'data-id': book.id,
         'data-description': book.description,
       },
-      label,
-      author,
-      deleteButton
+      titleMyCompleteBook,
+      authorMyCompleteBook,
+      deleteBookButton
     );
-    return this.addEventListenersForEnd(item);
+    return this.addEventListeners(item);
   }
 
-  addEventListeners(item) {
-    const removeButton = item.querySelector('button.removeBooks');
-    const endButton = item.querySelector('button.endBookButton');
-    removeButton.addEventListener('click', this.handleRemove.bind(this));
-    endButton.addEventListener('click', this.completeBook.bind(this));
+  addEventListeners(item, status) {
+    if (status === 'myBook') {
+      // т.к перенос книги в "завершенные" возможен только для моих книг
+      const transferToCompleteBook = item.querySelector('button.endBookButton');
+      transferToCompleteBook.addEventListener('click', this.moveToCompleted.bind(this));
+    }
+    const deleteBookButton = item.querySelector('button.removeBooks');
+    deleteBookButton.addEventListener('click', this.handleRemove.bind(this));
     return item;
   }
 
-  addEventListenersForEnd(item) {
-    const removeButton = item.querySelector('button.removeBooks');
-    removeButton.addEventListener('click', this.handleRemoveEnd.bind(this));
-    return item;
-  }
-
-  completeBook({ target }) {
+  moveToCompleted({ target }) {
     const listItem = target.parentNode;
     this.emit('moveToCompleted', listItem.getAttribute('data-id'));
   }
 
   handleRemove({ target }) {
     const listItem = target.parentNode;
-    this.emit('remove', listItem.getAttribute('data-id'));
-  }
-
-  handleRemoveEnd({ target }) {
-    const listItem = target.parentNode;
-    this.emit('removeEnd', listItem.getAttribute('data-id'));
+    const status = listItem.parentNode.id;
+    const id = listItem.getAttribute('data-id');
+    this.emit('remove', { id, status });
   }
 
   findListItem(id) {
@@ -86,7 +84,7 @@ class MyBooksPlannedView extends EventEmitter {
   }
 
   findListItemEnd(id) {
-    return this.endBook.querySelector(`[data-id="${id}"]`);
+    return this.finishedBook.querySelector(`[data-id="${id}"]`);
   }
 
   handleDragOver(event) {
@@ -105,7 +103,7 @@ class MyBooksPlannedView extends EventEmitter {
 
   handleDrop(event) {
     event.preventDefault();
-    this.emit('getObject', event.dataTransfer.getData('Text')); // передали название книги
+    this.emit('addBookFromDrag', event.dataTransfer.getData('Text')); // передали название книги
     return this;
   }
 
@@ -116,18 +114,20 @@ class MyBooksPlannedView extends EventEmitter {
 
   addItemInEnded(book) {
     const listItem = this.createEndItem(book);
-    this.endBook.appendChild(listItem);
+    this.myBook.removeChild(this.findListItem(book.id));
+    this.finishedBook.appendChild(listItem);
   }
 
-  removeItem(id) {
+  removeItem(id, status) {
     const listItem = this.findListItem(id);
-    this.myBook.removeChild(listItem);
-  }
+    const listItemEnd = this.findListItemEnd(id);
 
-  removeItemEnd(id) {
-    const listItem = this.findListItemEnd(id);
-    this.endBook.removeChild(listItem);
+    if (status === 'put') {
+      this.myBook.removeChild(listItem);
+    }
+    if (status === 'end') {
+      this.finishedBook.removeChild(listItemEnd);
+    }
   }
 }
-console.log('BookView ok');
 export default MyBooksPlannedView;
