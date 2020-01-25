@@ -1,34 +1,33 @@
 import { EventEmitter } from '../helpers';
 
 class MyBooksPlannedModel extends EventEmitter {
-  constructor(items = []) {
-    // состояние модели (на старте пустой массив)
+  constructor(booksArr = []) {
     super();
-    this.items = items;
+    this.booksArr = booksArr;
   }
 
   getItem(id) {
-    return this.items.find(item => item.id == id);
+    return this.booksArr.find(item => item.id === Number(id));
   }
 
   addItem(item) {
-    this.items.push(item);
+    this.booksArr.push(item);
     this.emit('returnBook', item);
-    this.emit('change', this.items);
+    this.emit('change', this.booksArr);
     return item;
   }
 
   addStatus(id) {
-    const index = this.getItem(id);
+    const index = this.getItem(Number(id));
     index.completed = true;
-    this.emit('change', this.items);
+    this.emit('change', this.booksArr);
   }
 
   removeItem(id) {
-    const index = this.items.findIndex(item => item.id == id);
+    const index = this.booksArr.findIndex(item => item.id === Number(id));
     if (index > -1) {
-      this.items.splice(index, 1);
-      this.emit('change', this.items);
+      this.booksArr.splice(index, 1);
+      this.emit('change', this.booksArr);
     }
   }
 }
