@@ -1,22 +1,22 @@
 import { EventEmitter } from '../helpers';
 
 class AllBooksListModel extends EventEmitter {
-  constructor(booksArr = []) {
+  constructor(booksOnList = []) {
     super();
-    this.booksArr = booksArr;
+    this.booksOnList = booksOnList;
   }
 
   getItem(id) {
-    return this.booksArr.find(item => item.id === id);
+    return this.booksOnList.find(item => item.id === id);
   }
 
   getItemByName(name) {
-    return this.booksArr.find(item => item.title === name);
+    return this.booksOnList.find(item => item.title === name);
   }
 
   addItem(item) {
-    this.booksArr.push(item);
-    this.emit('change', this.booksArr);
+    this.booksOnList.push(item);
+    this.emit('change', this.booksOnList);
     return item;
   }
 
@@ -28,15 +28,15 @@ class AllBooksListModel extends EventEmitter {
       item[prop] = author[prop];
     });
 
-    this.emit('change', this.booksArr);
+    this.emit('change', this.booksOnList);
     return item;
   }
 
   removeItem(id) {
-    const index = this.booksArr.findIndex(item => item.id === Number(id));
+    const index = this.booksOnList.findIndex(item => item.id === Number(id));
     if (index > -1) {
-      this.booksArr.splice(index, 1);
-      this.emit('change', this.booksArr);
+      this.booksOnList.splice(index, 1);
+      this.emit('change', this.booksOnList);
     }
   }
 }
