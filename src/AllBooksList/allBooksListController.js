@@ -6,16 +6,12 @@ class AllBooksListController {
     view.on('add', this.addBookOnListController.bind(this));
     view.on('remove', this.removeBook.bind(this));
 
-    view.show(model.booksArr);
+    view.show(model.booksOnList);
   }
 
   addBookOnListController(book) {
     let newID = 0;
-    if (this.model.booksArr.length > 4) {
-      newID = Date.now();
-    } else {
-      newID = Date.now() + this.model.booksArr.length;
-    }
+    newID = Date.now() + this.model.booksOnList.length;
 
     const item = this.model.addItem({
       id: newID,
