@@ -22,7 +22,7 @@ class MyBooksPlannedView extends EventEmitter {
     const item = createElement(
       'li',
       {
-        className: `book-item${book.completed ? ' completed' : ''}`,
+        className: `bookItem${book.completed ? ' completed' : ''}`,
         'data-id': book.id,
         'data-description': book.description,
       },
@@ -45,7 +45,7 @@ class MyBooksPlannedView extends EventEmitter {
     const item = createElement(
       'li',
       {
-        className: `book-item${book.completed ? ' completed' : ''}`,
+        className: `bookItem${book.completed ? ' completed' : ''}`,
         'data-id': book.id,
         'data-description': book.description,
       },
